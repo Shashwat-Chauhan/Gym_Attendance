@@ -73,6 +73,46 @@ app.get('/api/v1/users', async(req, res) => {
     }
 })
 
+
+app.get('/api/v1/attendance_bulk', async(req, res) => {
+    try {
+        const attendanceCounts = await Attendance.aggregate([
+          {
+            $group: {
+              _id: "$userId",
+              totalAttendance: { $count: {} }, // Count the number of attendance records for each user
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "_id",
+              foreignField: "_id",
+              as: "userInfo",
+            },
+          },
+          {
+            $unwind: "$userInfo",
+          },
+          {
+            $project: {
+              _id: 0,
+              userId: "$userInfo._id",
+              name: "$userInfo.name",
+              email: "$userInfo.email",
+              totalAttendance: 1,
+            },
+          },
+        ]);
+    
+        res.status(200).json(attendanceCounts);
+      } catch (error) {
+        console.error("Error fetching total attendance:", error);
+        res.status(500).json({ message: "Server error" });
+      }
+    });
+
+
 app.post('/api/v1/mark', (req, res) => {
     const {userId ,status} = req.body; // Extract from the JWT by middleware
     const user = User.findOne({userId})
@@ -99,8 +139,6 @@ app.post('/api/v1/mark', (req, res) => {
             message:"Server Error"
         })
     }
-
-
 })
 
 
