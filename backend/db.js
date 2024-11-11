@@ -40,8 +40,8 @@ const attendanceSchema = new mongoose.Schema({
         type:String,
         enum: ["present", "absent"],
         default:'absent'
-    }
-})
+    },
+}, {timestamps: true})
 
 const User = mongoose.model('User', userSchema)
 const Attendance = mongoose.model('Attendance', attendanceSchema)

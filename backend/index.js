@@ -1,4 +1,5 @@
 const express = require('express')
+const moment = require('moment'); // Use moment.js for easy date formatting
 const app = express()
 const jwt = require('jsonwebtoken');
 const cors = require('cors')
@@ -138,35 +139,46 @@ app.get('/api/v1/attendance_bulk', async (req, res) => {
   
 
 
-app.post('/api/v1/mark',authMiddleware ,(req, res) => {
+app.post('/api/v1/mark',authMiddleware , async(req, res) => {
 
     const { status } = req.body;
     const userId = req.userId; // userId is set by authMiddleware
-    const user = User.findOne({userId})
-    if(!user){
-        res.status(500).json({
-            message: "User not Found"
-        })
-    }
-    try{
-        const today = new Date()
-        const newAttendance = new Attendance({
-            userId,
-            status
-        })
+  
+  const today = moment().startOf('day'); // Get the current date (start of the day)
 
-        newAttendance.save()
-        res.status(201).json({
-            message: "Attendace marked successfully",
-            attendance: newAttendance
-        })
-    }catch(error){
-        console.log(error)
-        res.status(500).json({
-            message:"Server Error"
-        })
+  try {
+    // Check if attendance has already been marked today
+    const existingAttendance = await Attendance.findOne({
+      userId,
+      createdAt: { $gte: today.toDate() }, // Check for any attendance records created today
+    });
+
+    if (existingAttendance) {
+      return res.status(400).json({
+        message: "You have already marked your attendance for today.",
+      });
     }
-})
+
+    // Create a new attendance record if not already marked
+    const newAttendance = new Attendance({
+      userId,
+      status,
+    });
+
+    // Save the attendance record
+    await newAttendance.save();
+
+    res.status(201).json({
+      message: "Attendance marked successfully",
+      attendance: newAttendance,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Server Error: Unable to mark attendance",
+    });
+  }
+});
 
 
 app.listen(3000)
