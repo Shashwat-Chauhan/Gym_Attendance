@@ -1,16 +1,45 @@
+import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Signin = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handler(event) {
+    event.preventDefault();  // Prevent form submission refresh
+    axios.post("http://localhost:3000/api/v1/signin", {
+      email: email,
+      password: password
+    })
+    .then((response) => {
+      const token = response.data.token
+      if(token){
+        localStorage.setItem('token', token)
+        axios.defaults.headers['Authorization'] = `Bearer ${token}`;
+      }
+      console.log("Signin Success");
+      navigate('/home');
+    })
+    .catch(error => {
+      console.error("Signin failed:", error.message || error);
+    });
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900">
       <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center text-gray-100">Sign In</h2>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handler}>
           <div>
             <label className="block text-sm font-medium text-gray-400">Email</label>
             <input
               type="email"
               placeholder="johndoe@example.com"
               className="w-full px-4 py-2 mt-1 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}  // Bind input value to state
             />
           </div>
           <div>
@@ -19,6 +48,8 @@ const Signin = () => {
               type="password"
               placeholder="••••••••"
               className="w-full px-4 py-2 mt-1 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}  // Bind input value to state
             />
           </div>
           <button
