@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const { default: mongoose } = require('mongoose')
-const { User } = require('./db')
+const { User, Attendance } = require('./db')
 
 
 app.use(cors())
@@ -41,6 +41,22 @@ app.post('/api/v1/signup', async(req, res) => {
     }
 })
 
+app.post('/api/v1/signin', async(req, res) => {
+    const {email, password} = req.body;
+    
+    const user = await User.findOne({email})
+    if(!user){
+        res.status(500).json({
+            message:"User not found"
+        })
+    }
+    if (password == user.password){
+        res.status(200).json({
+            message:"login successfull"
+        })
+    }
+})
+
 app.get('/api/v1/users', async(req, res) => {
     try{
         const users = await User.find().select("-password")
@@ -57,7 +73,35 @@ app.get('/api/v1/users', async(req, res) => {
     }
 })
 
+app.post('/api/v1/mark', (req, res) => {
+    const {userId ,status} = req.body; // Extract from the JWT by middleware
+    const user = User.findOne({userId})
+    if(!user){
+        res.status(500).json({
+            message: "User not Found"
+        })
+    }
+    try{
+        const today = new Date()
+        const newAttendance = new Attendance({
+            userId,
+            status
+        })
 
+        newAttendance.save()
+        res.status(201).json({
+            message: "Attendace marked successfully",
+            attendance: newAttendance
+        })
+    }catch(error){
+        console.log(error)
+        res.status(500).json({
+            message:"Server Error"
+        })
+    }
+
+
+})
 
 
 app.listen(3000)
