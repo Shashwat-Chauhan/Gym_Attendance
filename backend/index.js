@@ -44,10 +44,11 @@ app.post('/api/v1/signup', async(req, res) => {
       await initialAttendance.save();
   
       const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, { expiresIn: '1d' });
-     
+      const userId = newUser._id
     res.status(201).json({
       message: "User created successfully",
-      token
+      token,
+      userId
     });
     } catch (error) {
     res.status(500).json({ message: error.message });
@@ -67,10 +68,12 @@ app.post('/api/v1/signin', async(req, res) => {
     
         // Generate a JWT
         const token = jwt.sign({ userId: user._id },JWT_SECRET, { expiresIn: '1d' });
-        
+        const userId = user._id
+
         res.status(200).json({
           message: "User signed in successfully",
-          token
+          token,
+          userId
         });
       } catch (error) {
         res.status(500).json({ message: error.message });
@@ -123,7 +126,7 @@ app.get('/api/v1/attendance_bulk', async (req, res) => {
           $project: {
             _id: 0,
             userId: "$userInfo._id",
-            name: "$userInfo.name",
+            username: "$userInfo.username",
             email: "$userInfo.email",
             totalAttendance: 1,
           },
@@ -179,6 +182,39 @@ app.post('/api/v1/mark',authMiddleware , async(req, res) => {
     });
   }
 });
+
+
+
+app.get('/api/v1/attendance/:userId', authMiddleware, async (req, res) => {
+  const { userId } = req.params; // Extract the userId from the request parameters
+  
+  try {
+    // Optional: Ensure that the requested user is the authenticated user
+    if (userId !== req.userId) {
+      return res.status(403).json({ message: "Forbidden: Unauthorized access" });
+    }
+
+    // Fetch all attendance records for the specified user
+    const attendanceRecords = await Attendance.find({ userId })
+      .sort({ createdAt: -1 });
+
+    if (!attendanceRecords || attendanceRecords.length === 0) {
+      return res.status(404).json({ message: "No attendance records found" });
+    }
+
+    res.status(200).json({
+      message: "Attendance records retrieved successfully",
+      attendance: attendanceRecords,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error: Unable to fetch attendance records" });
+  }
+});
+
+
+  
+
 
 
 app.listen(3000)
