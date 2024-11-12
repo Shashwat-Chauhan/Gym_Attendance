@@ -7,6 +7,8 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate(); // useNavigate hook for navigation
+  
+  const userId = localStorage.getItem('userId')
 
   useEffect(() => {
     const fetchTotalAttendance = async () => {
@@ -36,12 +38,17 @@ const Home = () => {
       >
         Mark Your Attendance
       </button>
+      <button
+         onClick={() => navigate(`/attendance/${userId}`)}// Navigate to Attendance details page
+        className="mx-5 bg-indigo-800 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded mb-6"
+      >
+        Get Details
+      </button>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {users.map((user) => (
           <div key={user.userId} className="bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold text-white mb-2">{user.name}</h2>
-            <p className="text-gray-400 mb-4">{user.email}</p>
-            <p className="text-lg text-gray-200 font-medium">
+            <h2 className="text-xl font-semibold text-white mb-2">{user.username}</h2>
+            <p className=" text-gray-400 ">
               Total Attendance: <span className="text-white">{user.totalAttendance}</span>
             </p>
           </div>

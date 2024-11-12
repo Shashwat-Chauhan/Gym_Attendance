@@ -15,8 +15,10 @@ const Signin = () => {
     })
     .then((response) => {
       const token = response.data.token
+      const userId = response.data.userId
       if(token){
         localStorage.setItem('token', token)
+        localStorage.setItem('userId', userId)
         axios.defaults.headers['Authorization'] = `Bearer ${token}`;
       }
       console.log("Signin Success");

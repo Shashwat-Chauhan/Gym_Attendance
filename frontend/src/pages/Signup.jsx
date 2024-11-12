@@ -19,7 +19,8 @@ const Signup = () => {
       .then((response) => {
         const token = response.data.token
       if(token){
-        localStorage.setItem('token', token)
+        localStorage.setItem('token', token) 
+        localStorage.setItem('userId', response.data.userId )
         axios.defaults.headers['Authorization'] = `Bearer ${token}`;
       }
         console.log("Signup Success");
