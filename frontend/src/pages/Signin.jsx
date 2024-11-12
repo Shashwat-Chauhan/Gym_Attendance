@@ -63,7 +63,7 @@ const Signin = () => {
         </form>
         <p className="text-sm text-center text-gray-400">
           Don’t have an account?{" "}
-          <a href="/signup" className="font-medium text-purple-500 hover:underline">
+          <a onClick={() => {navigate('/signup');}} className="font-medium text-purple-500 hover:underline">
             Sign up
           </a>
         </p>
