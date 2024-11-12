@@ -7,20 +7,20 @@ const userSchema = new mongoose.Schema({
         required:true,
         unique:true,
         trim:true,
-        minlength:3,
-        maxlength:20,
+        minlength:1,
+        maxlength:100,
     },
     password: {
         type:String,
         required:true,
-        minlength:3
+        minlength:1
     },
     username: {
         type:String,
         required:true,
         trim:true,
-        minlength:3,
-        maxlength:20
+        minlength:1,
+        maxlength:100
     }
 })
 
