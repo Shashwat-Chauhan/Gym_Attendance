@@ -21,7 +21,7 @@ const MarkAttendance = () => {
     try {
       const userId = ""; // Replace with the actual user ID from authentication
       const token = localStorage.getItem('token')
-      const response = await axios.post('http://localhost:3000/api/v1/mark', 
+      const response = await axios.post('https://gym-attendance-sdys.onrender.com/api/v1/mark', 
         { userId, status },
         {
           headers: {
