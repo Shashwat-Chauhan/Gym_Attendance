@@ -11,7 +11,7 @@ const Signup = () => {
 
   function handler(event) {
     event.preventDefault();
-    axios.post("https://gym-attendance-1.onrender.com/api/v1/signup", {
+    axios.post("https://gym-attendance-sdys.onrender.com/api/v1/signup", {
       username: username,
       email: email,
       password: password,

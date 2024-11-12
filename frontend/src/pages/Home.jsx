@@ -13,7 +13,7 @@ const Home = () => {
   useEffect(() => {
     const fetchTotalAttendance = async () => {
       try {
-        const response = await axios.get('https://gym-attendance-1.onrender.com/api/v1/attendance_bulk');
+        const response = await axios.get('https://gym-attendance-sdys.onrender.com/api/v1/attendance_bulk');
         setUsers(response.data);
         setLoading(false);
       } catch (err) {

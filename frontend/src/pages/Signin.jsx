@@ -9,7 +9,7 @@ const Signin = () => {
 
   function handler(event) {
     event.preventDefault();  // Prevent form submission refresh
-    axios.post("https://gym-attendance-1.onrender.com/api/v1/signin", {
+    axios.post("https://gym-attendance-sdys.onrender.com/api/v1/signin", {
       email: email,
       password: password
     })

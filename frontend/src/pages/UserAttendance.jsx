@@ -12,7 +12,7 @@ const UserAttendance = () => {
         const token = localStorage.getItem('token'); // Get token from local storage
         const userId = localStorage.getItem('userId'); // Get userId from local storage
 
-        const response = await axios.get(`https://gym-attendance-1.onrender.com/api/v1/attendance/${userId}`, {
+        const response = await axios.get(`https://gym-attendance-sdys.onrender.com/api/v1/attendance/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Set Authorization header
           },
