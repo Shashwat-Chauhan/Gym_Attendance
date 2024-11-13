@@ -6,9 +6,9 @@ const Home = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // useNavigate hook for navigation
+  const navigate = useNavigate();
   
-  const userId = localStorage.getItem('userId')
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     const fetchTotalAttendance = async () => {
@@ -30,16 +30,16 @@ const Home = () => {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="h-screen mx-auto p-4 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900">
+    <div className="min-h-screen overflow-y-auto mx-auto p-4 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900">
       <h1 className="text-2xl font-bold text-center text-white mb-6">User Attendance Summary</h1>
       <button
-        onClick={() => navigate('/mark-attendance')} // Navigate to MarkAttendance page
+        onClick={() => navigate('/mark-attendance')}
         className="bg-indigo-800 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded mb-6"
       >
         Mark Your Attendance
       </button>
       <button
-         onClick={() => navigate(`/attendance/${userId}`)}// Navigate to Attendance details page
+        onClick={() => navigate(`/attendance/${userId}`)}
         className="mx-5 bg-indigo-800 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded mb-6"
       >
         Get Details
@@ -48,7 +48,7 @@ const Home = () => {
         {users.map((user) => (
           <div key={user.userId} className="bg-gray-800 p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-semibold text-white mb-2">{user.username}</h2>
-            <p className=" text-gray-400 ">
+            <p className="text-gray-400">
               Total Attendance: <span className="text-white">{user.totalAttendance}</span>
             </p>
           </div>
